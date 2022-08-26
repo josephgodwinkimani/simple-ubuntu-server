@@ -20,6 +20,58 @@ How to setup an Ubuntu server with the following features:
 - [Deploy on Production](#deploy-on-production)
 - [Copyright and License](#copyright-and-license)
 
+### Install and Configure Config Server Firewall
+
+[CSF](https://download.configserver.com/csf/install.txt) checks the logs for failed login attempts at regular time interval, and is able to recognize most unauthorized attempts to gain access to your cloud server. You can define the desired action CSF takes and after how many attempts in the configuration file.
+
+The following applications are supported by this feature:
+
+    Courier imap, Dovecot, uw-imap, Kerio
+    openSSH
+    cPanel, WHM, Webmail (cPanel servers only)
+    Pure-ftpd, vsftpd, Proftpd
+    Password protected web pages (htpasswd)
+    Mod_security failures (v1 and v2)
+    Suhosin failures
+    Exim SMTP AUTH
+
+Services using the open ports:
+
+    Port 20: FTP data transfer
+    Port 21: FTP control
+    Port 22: Secure shell (SSH) => this should always be changed to 8123 etc
+    Port 25: Simple mail transfer protocol (SMTP)
+    Port 53: Domain name system (DNS)
+    Port 80: Hypertext transfer protocol (HTTP)
+    Port 110: Post office protocol v3 (POP3)
+    Port 113: Authentication service/identification protocol
+    Port 123: Network time protocol (NTP)
+    Port 143: Internet message access protocol (IMAP)
+    Port 443: Hypertext transfer protocol over SSL/TLS (HTTPS)
+    Port 465: URL Rendesvous Directory for SSM (Cisco)
+    Port 587: E-mail message submission (SMTP)
+    Port 993: Internet message access protocol over SSL (IMAPS)
+    Port 995: Post office protocol 3 over TLS/SSL (POP3S)
+
+```bash
+$ wget http://download.configserver.com/csf.tgz
+$ tar -xzf csf.tgz
+$ ufw disable
+$ cd csf && sh install.sh
+# check if the required iptables modules are available
+$ perl /usr/local/csf/bin/csftest.pl
+# change setting TESTING at the beginning of the configuration file to 0 i.e TESTING = "0"
+$ nano /etc/csf/csf.conf
+$ csf -r
+# Allowing IP addresses
+$ nano /etc/csf/csf.allow
+# Ignoring IP addresses
+$ nano /etc/csf/csf.ignore
+# change ssh port
+$ nano /etc/ssh/sshd_config
+$ service ssh restart
+```
+
 ### Configure Master BIND DNS Server
 
 > BIND is a suite of software for interacting with the Domain Name System. Its most prominent component, named, performs both of the main DNS server roles, acting as an authoritative name server for DNS zones and as a recursive resolver in the network.
@@ -68,11 +120,11 @@ $ cp /etc/bind/db.local /etc/bind/forward.mbuddyx.com.db
 
 The acronyms on the file have the following description:
 
-    **SOA** – Start of Authority
-    **NS** – Name Server
-    **A** – A record
-    **MX** – Mail for Exchange
-    **CN** – Canonical Name
+    SOA – Start of Authority
+    NS – Name Server
+    A – A record
+    MX – Mail for Exchange
+    CN – Canonical Name
 
 We have to edit the zone file and update the content as below. Modify it as per your domain name:
 
@@ -123,8 +175,8 @@ For the Reverse zone lookup file -
 
 The acronyms in the revese zone file are:
 
-    **PTR** – Pointer
-    **SOA** – Start of Authority
+    PTR – Pointer
+    SOA – Start of Authority
 
 Copy the sample reverse zone file in etc/bind to a file called `reverse.mbuddyx.com.db`
 
@@ -230,7 +282,9 @@ $ node -v
 $ npm -v
 # Install Yarn v1
 $ npm install yarn -g
-# Deploy your NodeJS app and then install PM2 process manager that makes it possible to daemonize applications so that they will run in the background as a service
+# Deploy your NodeJS app
+$ rsync -chavzP -e 'ssh -p 8123' ~/Projects/deployer/ root@164.68.107.219:/var/www/mbuddyx.com
+# Install PM2 process manager that makes it possible to daemonize applications so that they will run in the background as a service
 $ npm install pm2@latest -g
 $ pm2 start build/app.js
 $ pm2 startup systemd
@@ -366,4 +420,45 @@ server {
     }
 
 }
+```
+
+**Delete the SSL Certificate**
+
+Get the certificate's name that will delete:
+
+```bash
+$ certbot certificates
+```
+
+Delete only one certificate by the name
+
+```bash
+$ certbot delete --cert-name server.domain.tld
+```
+
+**Automatically Renew Let’s Encrypt Certificates**
+
+Open the crontab file:
+
+```bash
+$ crontab -e
+
+> 0 12 * * * /usr/bin/certbot renew --quiet --nginx # The command checks to see if the certificate on the server will expire within the next 30 days, and renews it if so
+
+```
+
+### Install a web GUI file manager
+
+> TinyFileManager is web based file manager and it is a simple, fast and small file manager with a single file, multi-language ready web application for storing, uploading, editing and managing files and folders online via web browser. The Application runs on PHP 5.5+, It allows the creation of multiple users and each user can have its own directory and a build-in support for managing text files with cloud9 IDE and it supports syntax highlighting for over 150+ languages and over 35+ themes.
+
+```bash
+$ wget https://github.com/prasathmani/tinyfilemanager/archive/refs/tags/2.4.7.zip
+$ unzip tinyfilemanager-2.4.7.zip
+$ cd tinyfilemanager-2.4.7
+# rename file to anything you need
+$ mv -f /var/www/mbuddyx.com/tinyfilemanager-2.4.7/tinyfilemanager.php /var/www/mbuddyx.com/filemanager.php
+$ nano tinyfilemanager.php
+> $auth_users = array(
+    'username' => 'REPLACE YOUR GENERATED PASSWORD HERE'
+);
 ```
