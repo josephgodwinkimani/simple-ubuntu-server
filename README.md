@@ -461,4 +461,5 @@ $ nano tinyfilemanager.php
 > $auth_users = array(
     'username' => 'REPLACE YOUR GENERATED PASSWORD HERE'
 );
+$ chmod 777 /var/www/mbuddyx.com
 ```
