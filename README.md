@@ -14,11 +14,8 @@ How to setup an Ubuntu server with the following features:
 - [Install and Configure MariaDB](#install-and-configure-mariadb)
 - [Setup your first NodeJS app](#setup-your-first-nodejs-app)
 - [Install and Configure the Lets Encrypt Client](#install-and-configure-the-lets-encrypt-client)
-- [Linting and Testing](#linting-and-testing)
-- [Build](#build)
-- [Deploy on Local](#deploy-on-local)
-- [Deploy on Production](#deploy-on-production)
-- [Copyright and License](#copyright-and-license)
+- [Install a web GUI file manager](#install-a-web-gui-file-manager)
+
 
 ### Install and Configure Config Server Firewall
 
@@ -461,5 +458,4 @@ $ nano tinyfilemanager.php
 > $auth_users = array(
     'username' => 'REPLACE YOUR GENERATED PASSWORD HERE'
 );
-$ chmod 777 /var/www/mbuddyx.com
 ```
