@@ -79,7 +79,7 @@ $ service ssh restart
 $ apt install -y bind9 bind9utils bind9-doc dnsutils
 ```
 
-2. Create the forward and reverse zones in global conf `/etc/bind/named.conf.local`
+2. Create the forward and reverse zones in global conf `nano /etc/bind/named.conf.local`
 
 ```bash
 # mbuddyx.com is the zone name
