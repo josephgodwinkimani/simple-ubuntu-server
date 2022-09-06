@@ -449,6 +449,8 @@ $ crontab -e
 > TinyFileManager is web based file manager and it is a simple, fast and small file manager with a single file, multi-language ready web application for storing, uploading, editing and managing files and folders online via web browser. The Application runs on PHP 5.5+, It allows the creation of multiple users and each user can have its own directory and a build-in support for managing text files with cloud9 IDE and it supports syntax highlighting for over 150+ languages and over 35+ themes.
 
 ```bash
+# install php 7.4
+$ apt install php7.4-fpm php7.4-common php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring php7.4-opcache php7.4-soap php7.4-zip php7.4-intl php7.4-bcmath
 $ wget https://github.com/prasathmani/tinyfilemanager/archive/refs/tags/2.4.7.zip
 $ unzip tinyfilemanager-2.4.7.zip
 $ cd tinyfilemanager-2.4.7
