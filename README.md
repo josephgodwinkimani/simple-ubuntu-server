@@ -179,6 +179,7 @@ Copy the sample reverse zone file in etc/bind to a file called `reverse.mbuddyx.
 
 ```bash
 $ cp /etc/bind/db.127 /etc/bind/reverse.mbuddyx.com.db
+$  /etc/bind/reverse.mbuddyx.com.db
 
 ```
 
@@ -226,7 +227,6 @@ $ named-checkzone 219.107.68.164.in-addr.arpa /etc/bind/reverse.mbuddyx.com.db
 $ systemctl restart bind9
 $ systemctl enable bind9
 # Test DNS server
-$ /etc/resolv.conf
 $ dig www.mbuddyx.com
 $ dig -x 164.68.107.219
 ```
