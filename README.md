@@ -256,12 +256,13 @@ $ systemctl status nginx
 1. Installation
 
 ```bash
-$ apt-get install apt-transport-https curl
+$ lsb_release -a
+$ apt-get install apt-transport-https curl -y
 $ curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc'
 $ sh -c "echo 'deb https://mariadb.mirror.liquidtelecom.com/repo/10.8/ubuntu focal main' >>/etc/apt/sources.list"
 # Once the key is imported and the repository added you can install MariaDB 10.8 from the MariaDB repository with:
 $ apt-get update
-$ apt-get install mariadb-server
+$ apt-get install mariadb-server -y
 ```
 
 2. Configuring MariaDB
