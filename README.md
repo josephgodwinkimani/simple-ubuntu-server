@@ -294,6 +294,15 @@ $ pm2 list
 $ pm2 monit
 ```
 
+### Setting up PHP and PHP FPM
+
+```bash
+# install php 7.4 and PHP-FPM for processing the PHP files with Nginx
+$ apt install php7.4 php7.4-common php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring php7.4-opcache php7.4-soap php7.4-zip php7.4-intl php7.4-bcmath php7.4-json -y
+$ systemctl start php7.4-fpm
+$ systemctl enable php7.4-fpm
+```
+
 ### Setting Up Nginx as a Reverse Proxy Server
 
 Create a Nginx configuration for your domain/website `nano /etc/nginx/sites-available/mbuddyx.com`
@@ -301,6 +310,7 @@ Create a Nginx configuration for your domain/website `nano /etc/nginx/sites-avai
 ```bash
 server {
     listen 80;
+    listen [::]:80;
     server_name mbuddyx.com www.mbuddyx.com;
     root /var/www/mbuddyx.com;
 
@@ -315,7 +325,7 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    location /app/ { # resides in mbuddyx.com/app/
+    location /api/build/ { # resides in mbuddyx.com/app/build/
         proxy_pass http://localhost:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -323,7 +333,7 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
-
+    
     location /app2/v1/ { # resides in mbuddyx.com/app2/v1/
         proxy_pass http://localhost:3002/;
         proxy_http_version 1.1;
@@ -333,9 +343,17 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
+    # This configuration is open undermbuddyx.com/api/v1
+    # https://laravel.com/docs/9.x/deployment#nginx
+    location /api/v1/public {
+            # alias //var/www/mbuddyx.com/api/v1/public;
+            try_files $uri $uri/ /index.php$is_args$args;
+    }
+
     location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
      }
 
     location ~ /\.ht {
@@ -349,6 +367,7 @@ Make sure you didn’t introduce any syntax errors by typing:
 
 ```bash
 $ nginx -t
+$ ln -d /etc/nginx/sites-available/mbuddyx.com /etc/nginx/sites-enabled/
 $ systemctl restart nginx
 ```
 
@@ -371,6 +390,7 @@ Edit the Nginx configuration for your domain/website `nano /etc/nginx/sites-avai
 ```bash
 server {
     listen 80;
+    listen [::]:80;
     server_name mbuddyx.com www.mbuddyx.com;
     root /var/www/mbuddyx.com;
 
@@ -398,8 +418,8 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    location /app/ {
-        proxy_pass http://localhost:3001/;
+    location /api/build/ { # resides in mbuddyx.com/app/build/
+        proxy_pass http://localhost:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -407,9 +427,17 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
+    # This configuration is open undermbuddyx.com/api/v1
+    # https://laravel.com/docs/9.x/deployment#nginx
+    location /api/v1/public {
+            # alias //var/www/mbuddyx.com/api/v1/public;
+            try_files $uri $uri/ /index.php$is_args$args;
+    }
+
     location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
      }
 
     location ~ /\.ht {
@@ -440,7 +468,7 @@ Open the crontab file:
 ```bash
 $ crontab -e
 
-> 0 12 * * * /usr/bin/certbot renew --quiet --nginx # The command checks to see if the certificate on the server will expire within the next 30 days, and renews it if so
+0 12 * * * /usr/bin/certbot renew --quiet --nginx # The command checks to see if the certificate on the server will expire within the next 30 days, and renews it if so
 
 ```
 
@@ -449,8 +477,6 @@ $ crontab -e
 > TinyFileManager is web based file manager and it is a simple, fast and small file manager with a single file, multi-language ready web application for storing, uploading, editing and managing files and folders online via web browser. The Application runs on PHP 5.5+, It allows the creation of multiple users and each user can have its own directory and a build-in support for managing text files with cloud9 IDE and it supports syntax highlighting for over 150+ languages and over 35+ themes.
 
 ```bash
-# install php 7.4
-$ apt install php7.4-fpm php7.4-common php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring php7.4-opcache php7.4-soap php7.4-zip php7.4-intl php7.4-bcmath
 $ wget https://github.com/prasathmani/tinyfilemanager/archive/refs/tags/2.4.7.zip
 $ unzip tinyfilemanager-2.4.7.zip
 $ cd tinyfilemanager-2.4.7
