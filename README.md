@@ -10,6 +10,7 @@ How to setup an Ubuntu server with the following features:
 ## Table of Contents
 
 - [Configure Master BIND DNS Server](#configure-master-bind-dns-server)
+- [Setting up PHP and PHP FPM](#setting-ip-php-and-php-fpm)
 - [Install and Configure Nginx](#install-and-configure-nginx)
 - [Install and Configure MariaDB](#install-and-configure-mariadb)
 - [Setup your first NodeJS app](#setup-your-first-nodejs-app)
