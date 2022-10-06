@@ -10,7 +10,7 @@ How to setup an Ubuntu server with the following features:
 ## Table of Contents
 
 - [Configure Master BIND DNS Server](#configure-master-bind-dns-server)
-- [Setting up PHP and PHP FPM](#setting-ip-php-and-php-fpm)
+- [Install and Configure PHP](#install-and-configure-php)
 - [Install and Configure Nginx](#install-and-configure-nginx)
 - [Install and Configure MariaDB](#install-and-configure-mariadb)
 - [Setup your first NodeJS app](#setup-your-first-nodejs-app)
@@ -232,6 +232,16 @@ $ dig www.mbuddyx.com
 $ dig -x 164.68.107.219
 ```
 
+
+### Install and Configure PHP
+
+```bash
+# install php 7.4 and PHP-FPM for processing the PHP files with Nginx
+$ apt install php7.4 php7.4-common php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring php7.4-opcache php7.4-soap php7.4-zip php7.4-intl php7.4-bcmath php7.4-json -y
+$ systemctl start php7.4-fpm
+$ systemctl enable php7.4-fpm
+```
+
 ### Install and Configure Nginx
 
 ```bash
@@ -293,15 +303,6 @@ $ systemctl status pm2
 $ pm2 list
 # Display the application status, CPU, and memory usage
 $ pm2 monit
-```
-
-### Setting up PHP and PHP FPM
-
-```bash
-# install php 7.4 and PHP-FPM for processing the PHP files with Nginx
-$ apt install php7.4 php7.4-common php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring php7.4-opcache php7.4-soap php7.4-zip php7.4-intl php7.4-bcmath php7.4-json -y
-$ systemctl start php7.4-fpm
-$ systemctl enable php7.4-fpm
 ```
 
 ### Setting Up Nginx as a Reverse Proxy Server
