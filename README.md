@@ -83,12 +83,12 @@ $ apt install -y bind9 bind9utils bind9-doc dnsutils
 2. Create the forward and reverse zones in global conf `nano /etc/bind/named.conf.local`
 
 ```bash
-# mbuddyx.com is the zone name
-zone "mbuddyx.com" IN { // Domain name
+# aifilms.ai is the zone name
+zone "aifilms.ai" IN { // Domain name
 
       type master; // Primary DNS
 
-     file "/etc/bind/forward.mbuddyx.com.db"; // Forward lookup file
+     file "/etc/bind/forward.aifilms.ai.db"; // Forward lookup file
 
      allow-update { none; }; // Since this is the primary DNS, it should be none.
 
@@ -98,7 +98,7 @@ zone "219.107.68.164.in-addr.arpa" IN { //Reverse lookup name, should match your
 
      type master; // Primary DNS
 
-     file "/etc/bind/reverse.mbuddyx.com.db"; //Reverse lookup file
+     file "/etc/bind/reverse.aifilms.ai.db"; //Reverse lookup file
 
      allow-update { none; }; //Since this is the primary DNS, it should be none.
 
@@ -110,10 +110,10 @@ zone "219.107.68.164.in-addr.arpa" IN { //Reverse lookup name, should match your
 
 3. Configure Bind DNS zone lookup files
 
-Copy the sample forward zone lookup file to a file called `forward.mbuddyx.com.db` under the /etc/bind directory
+Copy the sample forward zone lookup file to a file called `forward.aifilms.ai.db` under the /etc/bind directory
 
 ```bash
-$ cp /etc/bind/db.local /etc/bind/forward.mbuddyx.com.db
+$ cp /etc/bind/db.local /etc/bind/forward.aifilms.ai.db
 ```
 
 The acronyms on the file have the following description:
@@ -127,13 +127,13 @@ The acronyms on the file have the following description:
 We have to edit the zone file and update the content as below. Modify it as per your domain name:
 
 ```bash
-$ nano /etc/bind/forward.mbuddyx.com.db
+$ nano /etc/bind/forward.aifilms.ai.db
 ```
 
 ```bash
 
 $TTL    604800
-@       IN      SOA     ns1.mbuddyx.com. root.ns1.mbuddyx.com. (
+@       IN      SOA     ns1.aifilms.ai. root.ns1.aifilms.ai. (
                               3         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
@@ -146,26 +146,26 @@ $TTL    604800
 
 ;Name Server Information
 
-@        IN      NS      ns1.mbuddyx.com.
-@	 IN      A       164.68.107.219
-@        IN      AAAA    2a02:c207:2097:1942:0000:0000:0000:0001
+@        IN      NS      ns1.aifilms.ai.
+@	 IN      A       194.163.166.170
+@        IN      AAAA    2a02:c206:2120:3375:0000:0000:0000:0001
 
 ;IP address of Name Server
 
-ns1     IN      A       164.68.107.219
+ns1     IN      A       194.163.166.170
 
 ;Mail Exchanger
 
-mbuddyx.com.   IN     MX   10   mail.mbuddyx.com.
+aifilms.ai.   IN     MX   10   mail.aifilms.ai.
 
 ;A – Record HostName To Ip Address
 
-www     IN       A      164.68.107.219
-mail    IN       A      164.68.107.219
+www     IN       A      194.163.166.170
+mail    IN       A      194.163.166.170
 
 ;CNAME record
 
-ftp     IN      CNAME   www.mbuddyx.com.
+ftp     IN      CNAME   www.aifilms.ai.
 
 ```
 
@@ -176,11 +176,11 @@ The acronyms in the revese zone file are:
     PTR – Pointer
     SOA – Start of Authority
 
-Copy the sample reverse zone file in etc/bind to a file called `reverse.mbuddyx.com.db`
+Copy the sample reverse zone file in etc/bind to a file called `reverse.aifilms.ai.db`
 
 ```bash
-$ cp /etc/bind/db.127 /etc/bind/reverse.mbuddyx.com.db
-$  /etc/bind/reverse.mbuddyx.com.db
+$ cp /etc/bind/db.127 /etc/bind/reverse.aifilms.ai.db
+$  /etc/bind/reverse.aifilms.ai.db
 
 ```
 
@@ -190,7 +190,7 @@ $  /etc/bind/reverse.mbuddyx.com.db
 ; BIND reverse data file for local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     mbuddyx.com. root.mbuddyx.com. (
+@       IN      SOA     aifilms.ai. root.aifilms.ai. (
                               1         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
@@ -200,16 +200,16 @@ $TTL    604800
 
 ;Name Server Information
 
-@       IN      NS     ns1.mbuddyx.com.
-ns1     IN      A       164.68.107.219
+@       IN      NS     ns1.aifilms.ai.
+ns1     IN      A       194.163.166.170
 ;Reverse lookup for Name Server
 
-2      IN      PTR    ns1.mbuddyx.com.
+2      IN      PTR    ns1.aifilms.ai.
 
 ;PTR Record IP address to HostName
 
-3     IN      PTR    www.mbuddyx.com.
-4     IN      PTR    mail.mbuddyx.com.
+3     IN      PTR    www.aifilms.ai.
+4     IN      PTR    mail.aifilms.ai.
 
 ```
 
@@ -221,15 +221,15 @@ The named-checkconf command is used to check if the syntax is okay or if there i
 $ named-checkconf
 
 #forward zone file
-$ named-checkzone mbuddyx.com /etc/bind/forward.mbuddyx.com.db
+$ named-checkzone aifilms.ai /etc/bind/forward.aifilms.ai.db
 #reverse zone file
-$ named-checkzone 219.107.68.164.in-addr.arpa /etc/bind/reverse.mbuddyx.com.db
+$ named-checkzone 219.107.68.164.in-addr.arpa /etc/bind/reverse.aifilms.ai.db
 # restart and enable BIND service
 $ systemctl restart bind9
 $ systemctl enable bind9
 # Test DNS server
-$ dig www.mbuddyx.com
-$ dig -x 164.68.107.219
+$ dig www.aifilms.ai
+$ dig -x 194.163.166.170
 ```
 
 
@@ -292,7 +292,7 @@ $ npm -v
 # Install Yarn v1
 $ npm install yarn -g
 # Deploy your NodeJS app
-$ rsync -chavzP -e 'ssh -p 8123' ~/Projects/deployer/ root@164.68.107.219:/var/www/mbuddyx.com
+$ rsync -chavzP -e 'ssh -p 8123' ~/Projects/deployer/ root@194.163.166.170:/var/www/aifilms.ai
 # Install PM2 process manager that makes it possible to daemonize applications so that they will run in the background as a service
 $ npm install pm2@latest -g
 $ pm2 start build/app.js
@@ -308,14 +308,14 @@ $ pm2 monit
 
 ### Setting Up Nginx as a Reverse Proxy Server
 
-Create a Nginx configuration for your domain/website `nano /etc/nginx/sites-available/mbuddyx.com`
+Create a Nginx configuration for your domain/website `nano /etc/nginx/sites-available/aifilms.ai`
 
 ```bash
 server {
     listen 80;
     listen [::]:80;
-    server_name mbuddyx.com www.mbuddyx.com;
-    root /var/www/mbuddyx.com;
+    server_name aifilms.ai www.aifilms.ai;
+    root /var/www/aifilms.ai;
 
     index index.html index.htm index.php;
 
@@ -328,7 +328,7 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    location /api/build/ { # resides in mbuddyx.com/app/build/
+    location /api/build/ { # resides in aifilms.ai/app/build/
         proxy_pass http://localhost:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -337,7 +337,7 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
     
-    location /app2/v1/ { # resides in mbuddyx.com/app2/v1/
+    location /app2/v1/ { # resides in aifilms.ai/app2/v1/
         proxy_pass http://localhost:3002/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -346,10 +346,10 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    # This configuration is open undermbuddyx.com/api/v1
+    # This configuration is open underaifilms.ai/api/v1
     # https://laravel.com/docs/9.x/deployment#nginx
     location /api/v1/public {
-            # alias //var/www/mbuddyx.com/api/v1/public;
+            # alias //var/www/aifilms.ai/api/v1/public;
             try_files $uri $uri/ /index.php$is_args$args;
     }
 
@@ -370,7 +370,7 @@ Make sure you didn’t introduce any syntax errors by typing:
 
 ```bash
 $ nginx -t
-$ ln -d /etc/nginx/sites-available/mbuddyx.com /etc/nginx/sites-enabled/
+$ ln -d /etc/nginx/sites-available/aifilms.ai /etc/nginx/sites-enabled/
 $ systemctl restart nginx
 ```
 
@@ -385,25 +385,25 @@ $ nginx -t && nginx -s reload
 **Obtain the SSL/TLS Certificate**
 
 ```bash
-$ certbot --nginx -d mbuddyx.com -d www.mbuddyx.com
+$ certbot --nginx -d aifilms.ai -d www.aifilms.ai
 ```
 
-Edit the Nginx configuration for your domain/website `nano /etc/nginx/sites-available/mbuddyx.com`
+Edit the Nginx configuration for your domain/website `nano /etc/nginx/sites-available/aifilms.ai`
 
 ```bash
 server {
     listen 80;
     listen [::]:80;
-    server_name mbuddyx.com www.mbuddyx.com;
-    root /var/www/mbuddyx.com;
+    server_name aifilms.ai www.aifilms.ai;
+    root /var/www/aifilms.ai;
 
     index index.html index.htm index.php;
 
     listen 443 ssl; # managed by Certbot
 
     # RSA certificate
-    ssl_certificate /etc/letsencrypt/live/mbuddyx.com/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/mbuddyx.com/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/aifilms.ai/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/aifilms.ai/privkey.pem; # managed by Certbot
 
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
 
@@ -421,7 +421,7 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    location /api/build/ { # resides in mbuddyx.com/app/build/
+    location /api/build/ { # resides in aifilms.ai/app/build/
         proxy_pass http://localhost:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -430,10 +430,10 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    # This configuration is open undermbuddyx.com/api/v1
+    # This configuration is open underaifilms.ai/api/v1
     # https://laravel.com/docs/9.x/deployment#nginx
     location /api/v1/public {
-            # alias //var/www/mbuddyx.com/api/v1/public;
+            # alias //var/www/aifilms.ai/api/v1/public;
             try_files $uri $uri/ /index.php$is_args$args;
     }
 
@@ -484,7 +484,7 @@ $ wget https://github.com/prasathmani/tinyfilemanager/archive/refs/tags/2.4.7.zi
 $ unzip tinyfilemanager-2.4.7.zip
 $ cd tinyfilemanager-2.4.7
 # rename file to anything you need
-$ mv -f /var/www/mbuddyx.com/tinyfilemanager-2.4.7/tinyfilemanager.php /var/www/mbuddyx.com/filemanager.php
+$ mv -f /var/www/aifilms.ai/tinyfilemanager-2.4.7/tinyfilemanager.php /var/www/aifilms.ai/filemanager.php
 $ nano tinyfilemanager.php
 > $auth_users = array(
     'username' => 'REPLACE YOUR GENERATED PASSWORD HERE'
