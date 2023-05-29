@@ -1,6 +1,6 @@
-# Ubuntu Server setup
+# Ubuntu/Debian Server setup
 
-How to setup an Ubuntu server with the following features:
+How to setup an Ubuntu/Debian server with the following features:
 
 - BindDNS Management
 - MariaDB relational database
