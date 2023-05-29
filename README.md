@@ -1,6 +1,6 @@
-# Ubuntu/Debian Server setup
+# Ubuntu Server setup
 
-How to setup an Ubuntu/Debian server with the following features:
+How to setup an Ubuntu server with the following features:
 
 - BindDNS Management
 - MariaDB relational database
@@ -180,7 +180,7 @@ Copy the sample reverse zone file in etc/bind to a file called `reverse.aifilms.
 
 ```bash
 $ cp /etc/bind/db.127 /etc/bind/reverse.aifilms.ai.db
-$  /etc/bind/reverse.aifilms.ai.db
+$ nano /etc/bind/reverse.aifilms.ai.db
 
 ```
 
